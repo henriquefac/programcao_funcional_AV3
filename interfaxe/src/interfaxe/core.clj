@@ -19,11 +19,11 @@
       ;; Registrar todas as transacoes do financeiro para o blockchain
       (= comando (get comandos 0)) (println "deu certo")
       ;; Mostrar todas as transacoes
-      (= comando (get comandos 1)) (println "mostrar transacoes")
+      (= comando (get comandos 1)) (show)
       ;; Registrar transacao individual
       (= comando (get comandos 2)) (println (registrar opcoes))
       ;; Mostrar lista de blocos
-      (= comando (get comandos 3)) (println "mostrar blocos")
+      (= comando (get comandos 3)) (blocos)
       :else (println (str "Comando invalido; Opcoes: " comandos)))))
 
 ;; Função principal
@@ -32,4 +32,4 @@
   [& args]
   (let [{:keys [options]} (parse-opts args cli-options)]
     (chamar-funcao options)
-    (println (endereco "/transacoes" "3000"))))
+    ))

@@ -22,3 +22,27 @@
         tipo (:tipo argumentos)]
     (println (transacao valor tipo))
     (client/post (endereco "/transacoes" 3000) (transacao valor tipo))))
+
+
+;;função para pegar do financeiro a lista de transacoes
+;;path -> /transacao
+
+(defn show []
+  (let [lista-transacoes (json/parse-string (:body (client/get (endereco "/transacao" 3000))) true)]
+    (doseq [n (:transacoes lista-transacoes)]
+      (println n))))
+
+
+;;mostrar lista de blocos
+
+(defn blocos []
+  (let [lista-transacoes (json/parse-string (:body (client/get (endereco "/cadeia" 3001))) true)]
+    
+    (doseq [transacao (:BlockChain lista-transacoes)]
+      (println "------------------------")
+      (doseq [chave (keys transacao)]
+        (println chave (transacao chave)))))
+  )
+
+
+;;pegar lista do financeiro e colocar o bloco
