@@ -19,8 +19,7 @@
 ;; Função para registrar uma transação
 (defn registrar [argumentos]
   (let [valor (Integer/parseInt (:valor argumentos))
-        tipo (:tipo argumentos)]
-    (println (transacao valor tipo))
+        tipo (:tipo argumentos)] 
     (client/post (endereco "/transacoes" 3000) (transacao valor tipo))))
 
 
@@ -37,12 +36,19 @@
 
 (defn blocos []
   (let [lista-transacoes (json/parse-string (:body (client/get (endereco "/cadeia" 3001))) true)]
-    
+    (if (= (count (:BlockChain lista-transacoes)) 0)
+      (println "Sem blocos registrados")
     (doseq [transacao (:BlockChain lista-transacoes)]
       (println "------------------------")
       (doseq [chave (keys transacao)]
-        (println chave (transacao chave)))))
+        (println chave (transacao chave))))))
   )
 
 
 ;;pegar lista do financeiro e colocar o bloco
+;;vai requisitar de /transacao do financeiro
+;;a listaa de transacoes vai ser passada como argumento para /minerar de blockchain
+(defn registrar-todos []
+  (let [lista-transacoes (json/parse-string (:body (client/get (endereco "/transacao" 3000))) true)] 
+    (client/post (endereco "/minerar" 3001) (conteudo-como-json lista-transacoes)))
+  )

@@ -17,11 +17,11 @@
         comandos ["transacoes" "show" "registrar" "block"]]
     (cond
       ;; Registrar todas as transacoes do financeiro para o blockchain
-      (= comando (get comandos 0)) (println "deu certo")
+      (= comando (get comandos 0)) (println (:body (registrar-todos)))
       ;; Mostrar todas as transacoes
       (= comando (get comandos 1)) (show)
       ;; Registrar transacao individual
-      (= comando (get comandos 2)) (println (registrar opcoes))
+      (= comando (get comandos 2)) (println (:body (registrar opcoes)))
       ;; Mostrar lista de blocos
       (= comando (get comandos 3)) (blocos)
       :else (println (str "Comando invalido; Opcoes: " comandos)))))
