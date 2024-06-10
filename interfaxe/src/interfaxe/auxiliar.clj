@@ -1,6 +1,7 @@
 (ns interfaxe.auxiliar
   (:require [cheshire.core :as json]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [clojure.string :as str]))
 
 ;; Função para concatenar caminho
 (defn endereco [rota porta]
@@ -13,14 +14,35 @@
    :throw-exceptions false})
 
 ;; Função para criar uma transação
-(defn transacao [valor tipo]
+(defn criar-transacao [valor tipo]
   (conteudo-como-json {:valor valor :tipo tipo}))
 
+(defn criar-transacao-filtro [valor tipo filtros]
+  (conteudo-como-json {:valor valor :tipo tipo :filtros filtros}))
+
+
+;;saber se é receita ou despesa
+(defn define-tipo [tipo]
+  (cond
+    (= tipo "r")"receita"
+    (= tipo "d")"despesa"))
+
+
+;;saber se contem string vazia
+(defn contem-string-vazia? [vetor]
+  (some #(= "" %) vetor))
+
+
 ;; Função para registrar uma transação
-(defn registrar [argumentos]
+(defn transacao [argumentos]
   (let [valor (Integer/parseInt (:valor argumentos))
-        tipo (:tipo argumentos)] 
-    (client/post (endereco "/transacoes" 3000) (transacao valor tipo))))
+        tipo (define-tipo (:tipo argumentos))
+        filtros (str/split (:filtros argumentos) #",")]
+    (cond
+      (contem-string-vazia? filtros) (client/post (endereco "/transacoes" 3000) (criar-transacao valor tipo)) 
+      :else (client/post (endereco "/transacoes" 3000) (criar-transacao-filtro valor tipo filtros))
+      )
+    ))
 
 
 ;;função para pegar do financeiro a lista de transacoes
