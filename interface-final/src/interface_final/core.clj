@@ -7,8 +7,9 @@
 ;; Função para limpar o terminal
 (defn clear-screen []
   (if (.contains (System/getProperty "os.name") "Windows")
-    (do (sh "cmd" "/c" "cls"))
-    (do (sh "clear"))))
+    (-> (sh "cmd" "/c" "cls") :out println)
+    (-> (sh "clear") :out println)))
+
 
 ;;gerar menu de opções para o usuário
 (defn menu []
@@ -24,11 +25,11 @@
   (let [comando (Integer/parseInt numero)]
     (cond
       ;;regirtrar tudo
-      (= comando 1)(println(:body(registrar-todos)))
+      (= comando 1)(registrar-todos)
       ;;Mostrar transacao
       (= comando 2) (show)
       ;;Criar transacao
-      (= comando 3) (println (:body (submenu)))
+      (= comando 3) (submenu)
       ;;Mostrar Blocos
       (= comando 4) (blocos)
       ;;sair do sistema
@@ -37,8 +38,7 @@
 
 
 ;fazer recursividade do menu
-(defn interfaxe []
-  (clear-screen)
+(defn interfaxe [] 
   (menu)
   (let [input (read-line)]
     (if (= input "5")
